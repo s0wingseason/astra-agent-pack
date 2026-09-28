@@ -1,0 +1,94 @@
+# Arduino Astra Orchestrator Configuration
+# ============================================
+# This file configures the end-to-end autonomous development pipeline.
+
+# --- Board Configuration ---
+board:
+  # Board FQBN (Fully Qualified Board Name)
+  # Examples:
+  #   arduino:avr:uno
+  #   arduino:avr:nano
+  #   arduino:avr:mega
+  #   esp32:esp32:esp32
+  #   esp32:esp32:esp32s3
+  #   esp32:esp32:esp32c3
+  fqbn: "esp32:esp32:esp32"
+
+  # Serial port (auto-detect if empty)
+  port: ""
+
+  # Serial monitor baud rate
+  baud_rate: 115200
+
+# --- AI Provider Configuration ---
+ai:
+  # Provider: "openai", "gemini", or "anthropic"
+  provider: "openai"
+
+  # Model to use
+  # OpenAI: "gpt-4o", "gpt-4o-mini", "o3-mini"
+  # Gemini: "gemini-2.5-pro", "gemini-2.5-flash"
+  # Anthropic: "claude-sonnet-4-20250514", "claude-opus-4-20250514"
+  model: "gpt-4o"
+
+  # API key (reads from env var if prefixed with $)
+  # Set OPENAI_API_KEY, GEMINI_API_KEY, or ANTHROPIC_API_KEY env var
+  # Or paste the key directly (not recommended for shared configs)
+  api_key: "$OPENAI_API_KEY"
+
+  # Temperature for code generation (lower = more deterministic)
+  code_temperature: 0.2
+
+  # Temperature for architecture/review (slightly higher for creativity)
+  review_temperature: 0.5
+
+  # Max tokens per response
+  max_tokens: 8000
+
+# --- Pipeline Configuration ---
+pipeline:
+  # Maximum compile-fix iterations before giving up
+  max_fix_iterations: 5
+
+  # Maximum total pipeline iterations (full cycles)
+  max_pipeline_cycles: 3
+
+  # Require user confirmation before uploading to board
+  confirm_upload: true
+
+  # Serial monitor capture duration (seconds) for test verification
+  serial_capture_seconds: 10
+
+  # Auto-apply generated code to sketch files
+  auto_apply_code: true
+
+  # Phases to run (comment out to skip)
+  phases:
+    - architect
+    - implement
+    - compile_fix
+    - upload
+    - serial_test
+    - report
+
+# --- Paths ---
+paths:
+  # arduino-cli path (auto-detect if empty)
+  arduino_cli: ""
+
+  # Sketch directory (uses current directory if empty)
+  sketch_dir: ""
+
+  # Output directory for reports
+  report_dir: "./astra_reports"
+
+# --- Logging ---
+logging:
+  # Log level: "debug", "info", "warning", "error"
+  level: "info"
+
+  # Log to file
+  log_file: "./astra_reports/orchestrator.log"
+
+  # Show LLM prompts/responses in log (verbose, uses tokens in display)
+  show_llm_traffic: false
